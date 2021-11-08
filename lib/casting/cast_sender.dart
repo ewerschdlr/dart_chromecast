@@ -215,13 +215,15 @@ class CastSender extends Object {
   }
 
   void setActiveSubtitleTrackByLanguage(String language) {
-    _castMediaAction(CastSenderEventType.EDIT_TRACKS_INFO.string, {'language': language});
+    Map<String, dynamic> map = {'language': language};
+    _castMediaAction(CastSenderEventType.EDIT_TRACKS_INFO.string, map);
     log.info(CastSenderEventType.EDIT_TRACKS_INFO.string);
   }
 
   void setActiveAudioTrackByLanguage(String language) {
     if(language == '') return;
-    _castMediaAction(CastSenderEventType.EDIT_AUDIO_TRACKS.string, {'language': language});
+    Map<String, dynamic> map = {'language': language};
+    _castMediaAction(CastSenderEventType.EDIT_AUDIO_TRACKS.string, map);
     log.info(CastSenderEventType.EDIT_AUDIO_TRACKS.string);
   }
 
