@@ -18,6 +18,24 @@ import 'package:dart_chromecast/casting/receiver_channel.dart';
 import 'package:dart_chromecast/proto/cast_channel.pb.dart';
 import 'package:logging/logging.dart';
 
+enum CastSenderEventType {
+  EDIT_AUDIO_TRACKS,
+  EDIT_TRACKS_INFO
+}
+
+extension CastSenderEventTypeNamed on CastSenderEventType {
+  String get string {
+    switch(this) {
+      case CastSenderEventType.EDIT_AUDIO_TRACKS:
+        return 'EDIT_AUDIO_TRACKS';
+      case CastSenderEventType.EDIT_TRACKS_INFO:
+        return 'EDIT_TRACKS_INFO';
+      default:
+        return '';
+    }
+  }
+}
+
 class CastSender extends Object {
   final Logger log = new Logger('CastSender');
   final CastDevice device;
@@ -194,6 +212,13 @@ class CastSender extends Object {
   void setVolume(double volume) {
     Map<String, dynamic> map = {'volume': min(volume, 1)};
     _castMediaAction('VOLUME', map);
+  }
+
+  void setActiveLanguageTrack(CastSenderEventType castSenderEventType, String language) {
+    if(castSenderEventType != CastSenderEventType.EDIT_AUDIO_TRACKS || castSenderEventType != CastSenderEventType.EDIT_TRACKS_INFO) return;
+    if(castSenderEventType != CastSenderEventType.EDIT_AUDIO_TRACKS || language == '') return;
+    _castMediaAction(castSenderEventType.string, {'language': language});
+    log.info(castSenderEventType.string);
   }
 
   CastSession? get castSession => _castSession;
