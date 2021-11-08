@@ -214,11 +214,15 @@ class CastSender extends Object {
     _castMediaAction('VOLUME', map);
   }
 
-  void setActiveLanguageTrack(CastSenderEventType castSenderEventType, String language) {
-    if(castSenderEventType != CastSenderEventType.EDIT_AUDIO_TRACKS || castSenderEventType != CastSenderEventType.EDIT_TRACKS_INFO) return;
-    if(castSenderEventType != CastSenderEventType.EDIT_AUDIO_TRACKS || language == '') return;
-    _castMediaAction(castSenderEventType.string, {'language': language});
-    log.info(castSenderEventType.string);
+  void setActiveSubtitleTrackByLanguage(String language) {
+    _castMediaAction(CastSenderEventType.EDIT_TRACKS_INFO.string, {'language': language});
+    log.info(CastSenderEventType.EDIT_TRACKS_INFO.string);
+  }
+
+  void setActiveAudioTrackByLanguage(String language) {
+    if(language == '') return;
+    _castMediaAction(CastSenderEventType.EDIT_AUDIO_TRACKS.string, {'language': language});
+    log.info(CastSenderEventType.EDIT_AUDIO_TRACKS.string);
   }
 
   CastSession? get castSession => _castSession;
