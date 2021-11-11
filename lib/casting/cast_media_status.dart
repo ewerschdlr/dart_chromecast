@@ -1,6 +1,25 @@
 import 'dart:convert';
 import 'package:logging/logging.dart';
 
+class Track {
+  int? trackId;
+  String? lang;
+  String? label;
+
+  Track({this.trackId, this.lang, this.label});
+
+  factory Track.fromJson(Map<String, dynamic> json) => Track(trackId: json['trackId'], lang: json['lang'], label: json['label']);
+
+  @override
+  String toString() {
+    return jsonEncode({
+      'trackId': trackId,
+      'lang': lang,
+      'label': label
+    });
+  }
+}
+
 class CastMediaStatus {
 
   final Logger log = new Logger('CastMediaStatus');
@@ -20,6 +39,9 @@ class CastMediaStatus {
   final double? _volume;
   final double? _position;
   final Map? _media;
+  final List<dynamic> _activeTrackIds;
+  final List<dynamic> _audioTracks;
+  final List<dynamic> _subtitleTracks;
 
   CastMediaStatus.fromChromeCastMediaStatus(Map mediaStatus)
       : _sessionId = mediaStatus['mediaSessionId'],
@@ -35,7 +57,10 @@ class CastMediaStatus {
         _hasError = 'IDLE' == mediaStatus['playerState'] && 'ERROR' == mediaStatus['idleReason'],
         _volume = null != mediaStatus['volume'] ? mediaStatus['volume']['level'].toDouble() : null,
         _position = mediaStatus['currentTime'].toDouble(),
-        _media = mediaStatus['media'];
+        _media = mediaStatus['media'],
+        _activeTrackIds = mediaStatus['activeTrackIds'],
+        _audioTracks = mediaStatus['customData']['audio'].map((e) => Track.fromJson(e)).toList(),
+        _subtitleTracks = mediaStatus['customData']['subtitle'].map((e) => Track.fromJson(e)).toList();
 
   dynamic get sessionId => _sessionId;
 
@@ -65,6 +90,12 @@ class CastMediaStatus {
 
   Map? get media => _media;
 
+  List<dynamic>? get activeTrackIds => _activeTrackIds;
+
+  List<dynamic>? get audioTracks => _audioTracks;
+
+  List<dynamic>? get subtitleTracks => _subtitleTracks;
+
   @override
   String toString() {
     return jsonEncode({
@@ -81,7 +112,10 @@ class CastMediaStatus {
       'hasError': _hasError,
       'volume': _volume,
       'position': _position,
-      'media': _media
+      'media': _media,
+      'activeTrackIds': _activeTrackIds,
+      // 'audioTracks': _audioTracks,
+      // 'subtitleTracks': _subtitleTracks,
     });
   }
 
