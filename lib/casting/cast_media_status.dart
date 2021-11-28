@@ -59,8 +59,8 @@ class CastMediaStatus {
         _position = mediaStatus['currentTime'].toDouble(),
         _media = mediaStatus['media'],
         _activeTrackIds = mediaStatus['activeTrackIds'],
-        _audioTracks = mediaStatus['customData']['audio'].map((e) => Track.fromJson(e)).toList(),
-        _subtitleTracks = mediaStatus['customData']['subtitle'].map((e) => Track.fromJson(e)).toList();
+        _audioTracks = mediaStatus['customData']?['audio']?.map((e) => Track.fromJson(e)).toList(),
+        _subtitleTracks = mediaStatus['customData']?['subtitle']?.map((e) => Track.fromJson(e)).toList();
 
   dynamic get sessionId => _sessionId;
 
