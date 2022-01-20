@@ -131,10 +131,10 @@ class CastSender extends Object {
   }
 
   Future<bool> disconnect() async {
-    if (null != _connectionChannel && null != _castSession?.castMediaStatus) {
+    if (null != _connectionChannel) {
       _connectionChannel!.sendMessage({
         'type': 'CLOSE',
-        'sessionId': _castSession!.castMediaStatus!.sessionId,
+        'sessionId': _castSession?.castMediaStatus?.sessionId ?? 'anyId', // Any id works in cases where this info has not yet been retrieved by MEDIA_STATUS
       });
     }
 
@@ -326,6 +326,8 @@ class CastSender extends Object {
       }
 
       if (payload['status'].length > 0) {
+        // print('playerState: ${payload['status'][0]['playerState']}');
+        // if(payload['status'][0]['media'] != null) print(payload['status'][0]['media']['tracks']);
         _castSession!.castMediaStatus =
             CastMediaStatus.fromChromeCastMediaStatus(payload['status'][0]);
 
